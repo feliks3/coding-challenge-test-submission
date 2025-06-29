@@ -7,6 +7,7 @@ import InputText from "@/components/InputText/InputText";
 import Radio from "@/components/Radio/Radio";
 import Section from "@/components/Section/Section";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import Form from "@/components/Form/Form";
 import useAddressBook from "@/hooks/useAddressBook";
 import useFormFields from "@/hooks/useFormFields";
 
@@ -112,7 +113,10 @@ function App() {
     });
   };
 
-  const clearAllFields = () => resetFields;
+  const clearAllFields = () => {
+    resetFields();
+    setAddresses([]);
+  };
 
   if (loading) {
     return <Spinner />;
@@ -128,29 +132,32 @@ function App() {
             Enter an address by postcode add personal info and done! 👏
           </small>
         </h1>
-        {/* TODO: Create generic <Form /> component to display form rows, legend and a submit button  */}
-        <form onSubmit={handleAddressSubmit}>
-          <fieldset>
-            <legend>🏠 Find an address</legend>
-            <div className={styles.formRow}>
-              <InputText
-                name="postCode"
-                onChange={handleChange}
-                placeholder="Post Code"
-                value={values.postCode}
-              />
-            </div>
-            <div className={styles.formRow}>
-              <InputText
-                name="houseNumber"
-                onChange={handleChange}
-                value={values.houseNumber}
-                placeholder="House number"
-              />
-            </div>
-            <Button type="submit">Find</Button>
-          </fieldset>
-        </form>
+        {/* DONE: Create generic <Form /> component to display form rows, legend and a submit button  */}
+        <Form
+          label="🏠 Find an address"
+          loading={loading}
+          formEntries={[
+            {
+              name: "postCode",
+              placeholder: "Post Code",
+              extraProps: {
+                value: values.postCode,
+                onChange: handleChange,
+              },
+            },
+            {
+              name: "houseNumber",
+              placeholder: "House number",
+              extraProps: {
+                value: values.houseNumber,
+                onChange: handleChange,
+              },
+            },
+          ]}
+          onFormSubmit={handleAddressSubmit}
+          submitText="Find"
+        ></Form>
+
         {addresses.length > 0 &&
           addresses.map((address) => {
             return (
@@ -164,30 +171,32 @@ function App() {
               </Radio>
             );
           })}
-        {/* TODO: Create generic <Form /> component to display form rows, legend and a submit button  */}
+        {/* DONE: Create generic <Form /> component to display form rows, legend and a submit button  */}
         {values.selectedAddress && (
-          <form onSubmit={handlePersonSubmit}>
-            <fieldset>
-              <legend>✏️ Add personal info to address</legend>
-              <div className={styles.formRow}>
-                <InputText
-                  name="firstName"
-                  placeholder="First name"
-                  onChange={handleChange}
-                  value={values.firstName}
-                />
-              </div>
-              <div className={styles.formRow}>
-                <InputText
-                  name="lastName"
-                  placeholder="Last name"
-                  onChange={handleChange}
-                  value={values.lastName}
-                />
-              </div>
-              <Button type="submit">Add to addressbook</Button>
-            </fieldset>
-          </form>
+          <Form
+            label="✏️ Add personal info to address"
+            loading={loading}
+            formEntries={[
+              {
+                name: "firstName",
+                placeholder: "First name",
+                extraProps: {
+                  value: values.firstName,
+                  onChange: handleChange,
+                },
+              },
+              {
+                name: "lastName",
+                placeholder: "Last name",
+                extraProps: {
+                  value: values.lastName,
+                  onChange: handleChange,
+                },
+              },
+            ]}
+            onFormSubmit={handlePersonSubmit}
+            submitText="Add to addressbook"
+          ></Form>
         )}
 
         {/* DONE: Create an <ErrorMessage /> component for displaying an error message */}
@@ -199,6 +208,9 @@ function App() {
         On Click, it must clear all form fields, remove all search results and clear all prior
         error messages
         */}
+        <Button variant="secondary" onClick={clearAllFields}>
+          Clear all fields
+        </Button>
       </Section>
 
       <Section variant="dark">

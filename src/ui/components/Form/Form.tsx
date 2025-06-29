@@ -7,16 +7,16 @@ import $ from './Form.module.css';
 interface FormEntry {
   name: string;
   placeholder: string;
-  // TODO: Defined a suitable type for extra props
+  // DONE: Defined a suitable type for extra props
   // This type should cover all different of attribute types
-  extraProps: any;
+  extraProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 interface FormProps {
   label: string;
   loading: boolean;
   formEntries: FormEntry[];
-  onFormSubmit: () => void;
+  onFormSubmit: (e: React.ChangeEvent<HTMLFormElement>) => void;
   submitText: string;
 }
 
@@ -25,7 +25,7 @@ const Form: FunctionComponent<FormProps> = ({
   loading,
   formEntries,
   onFormSubmit,
-  submitText
+  submitText,
 }) => {
   return (
     <form onSubmit={onFormSubmit}>
@@ -37,7 +37,7 @@ const Form: FunctionComponent<FormProps> = ({
               key={`${name}-${index}`}
               name={name}
               placeholder={placeholder}
-              {...extraProps}
+              extraProps={extraProps}
             />
           </div>
         ))}

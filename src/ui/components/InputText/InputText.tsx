@@ -5,25 +5,24 @@ import $ from "./InputText.module.css";
 interface InputTextProps {
   name: string;
   placeholder: string;
-  value: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  extraProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 const InputText: FunctionComponent<InputTextProps> = ({
   name,
-  onChange,
   placeholder,
-  value,
+  extraProps,
 }) => {
   return (
     <input
       aria-label={name}
       className={$.inputText}
       name={name}
-      onChange={onChange}
+      onChange={extraProps.onChange}
       placeholder={placeholder}
       type="text"
-      value={value}
+      value={extraProps.value}
+      {...extraProps}
     />
   );
 };
