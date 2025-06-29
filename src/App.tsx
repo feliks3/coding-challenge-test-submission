@@ -56,6 +56,21 @@ function App() {
   const handleAddressSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if(!values.postCode || !values.houseNumber){
+      setError("Postcode and house number fields mandatory!");
+      return;
+    }
+
+    if(!/^\d+$/.test(values.postCode) || !/^\d+$/.test(values.houseNumber)){
+      setError("Postcode and house number be all digits!");
+      return;
+    }
+
+    if(values.postCode.length < 4){
+      setError("Postcode must be at least 4 digits");
+      return;
+    }
+
     setError(undefined);
     setAddresses([]);
     setLoading(true);
@@ -89,6 +104,11 @@ function App() {
    */
   const handlePersonSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(!values.firstName || !values.lastName){
+      setError("First name and last name fields mandatory!");
+      return;
+    }
 
     if (!values.selectedAddress || !addresses.length) {
       setError(
@@ -202,13 +222,13 @@ function App() {
         {/* DONE: Create an <ErrorMessage /> component for displaying an error message */}
         {error && <ErrorMessage message={error} />}
 
-        {/* TODO: Add a button to clear all form fields. 
+        {/* DONE: Add a button to clear all form fields. 
         Button must look different from the default primary button, see design. 
         Button text name must be "Clear all fields"
         On Click, it must clear all form fields, remove all search results and clear all prior
         error messages
         */}
-        <Button variant="secondary" onClick={clearAllFields}>
+        <Button variant="secondary" onClick={clearAllFields} type="reset">
           Clear all fields
         </Button>
       </Section>
